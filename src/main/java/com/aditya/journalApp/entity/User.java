@@ -31,7 +31,11 @@ public class User {
     private String password;
 
     @DBRef
-    private List<JournalEntry> journalEntries = new ArrayList<>(); //so that when a user is initialized , journalentries is an empty list and not null.
+    private List<JournalEntry> journalEntries = new ArrayList<>(); //so that when a user is initialized, journalentries is an empty list and not null.
 
     private List<String> roles;
+
+    private String email;
+
+    private boolean sentimentAnalysis;
 }

@@ -1,7 +1,10 @@
 package com.aditya.journalApp.controller;
 
 import com.aditya.journalApp.entity.User;
+import com.aditya.journalApp.entity.Weather;
+import com.aditya.journalApp.repository.UserRepoImpl;
 import com.aditya.journalApp.service.UserService;
+import com.aditya.journalApp.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +21,16 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping
+    @Autowired
+    WeatherService weatherService;
+
+    @Autowired
+    UserRepoImpl userRepoImpl;
+
+    /*@GetMapping("get-all")
     public List<User> getAllUser() {
         return userService.getAll();
-    }
+    }*/
 
 
 
@@ -45,6 +54,20 @@ public class UserController {
         return new ResponseEntity<>(userService.deleteByUserName(), HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping()
+    public ResponseEntity<?> greet() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Weather body = weatherService.getWeather("Mumbai");
+        String greeting =  " , todays weather feels like " + body.getCurrent().getFeelslike();
+        return new ResponseEntity<>("hey " + authentication.getName() +greeting, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/sentiment")
+    public List<User> getusersForSentiment(){
+        return userRepoImpl.getUsersForSA();
+    }
 
 
 }

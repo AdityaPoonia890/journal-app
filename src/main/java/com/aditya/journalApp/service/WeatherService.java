@@ -2,6 +2,7 @@ package com.aditya.journalApp.service;
 
 import com.aditya.journalApp.cache.AppCache;
 import com.aditya.journalApp.entity.Weather;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -26,15 +27,29 @@ public class WeatherService {
 
     private final RestTemplate restTemplate;
     public WeatherService(RestTemplate restTemplate) {
+
         this.restTemplate = restTemplate;
     }
 
-    public Weather getWeather(String city) {
-        String finalApi = appCache.appCache.get(keys.WEATHER_API).replace("CITY",city).replace("API_KEY",apiKey);
-        ResponseEntity<Weather> response = restTemplate.exchange(finalApi, HttpMethod.GET, null, Weather.class);
+    @Autowired
+    RedisService redisService;
 
-        Weather body = response.getBody();
-        return body;
+    public Weather getWeather(String city)throws Exception {
+
+        Weather weather = redisService.get("weather_of_" + city, Weather.class);
+
+        if (weather != null) {
+
+            return weather;
+        } else {
+            String finalApi = appCache.appCacheMap.get(keys.WEATHER_API.toString()).replace("CITY",city).replace("API_KEY",apiKey);
+            ResponseEntity<Weather> response = restTemplate.exchange(finalApi, HttpMethod.GET, null, Weather.class);
+
+            redisService.set("weather_of_" + city, response.getBody());
+
+            return response.getBody();
+        }
+
 
     }
 }

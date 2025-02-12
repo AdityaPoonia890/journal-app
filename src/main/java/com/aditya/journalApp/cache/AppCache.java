@@ -17,17 +17,17 @@ public class AppCache {
     @Autowired
     ConfigJournalAppRepo configJournalAppRepo;
 
-    public HashMap<String, String> appCache;
+    public HashMap<String, String> appCacheMap;
 
     @PostConstruct
     public void init() {
 
-        appCache = new HashMap<>();
+        appCacheMap = new HashMap<>();
 
         List<ConfigJournalAppEntity> all = configJournalAppRepo.findAll();
 
         for (ConfigJournalAppEntity configJournalAppEntity: all) {
-            appCache.put(configJournalAppEntity.getKey(), configJournalAppEntity.getValue());
+            appCacheMap.put(configJournalAppEntity.getKey(), configJournalAppEntity.getValue());
         }
     }
 

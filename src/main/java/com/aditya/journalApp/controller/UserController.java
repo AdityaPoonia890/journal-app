@@ -55,10 +55,10 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> greet() {
+    public ResponseEntity<?> greet() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Weather body = weatherService.getWeather("Mumbai");
+        Weather body = weatherService.getWeather("Chennai");
         String greeting =  " , todays weather feels like " + body.getCurrent().getFeelslike();
         return new ResponseEntity<>("hey " + authentication.getName() +greeting, HttpStatus.OK);
 

@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +77,7 @@ public class JournalEntryController {
         System.out.println("Received Journal Entry: " + myEntry);
 
        if (myEntry.getDate() == null) {
-            myEntry.setDate(new Date()); // Set current date if none provided
+            myEntry.setDate(LocalDateTime.now()); // Set current date if none provided
         }
         journalEntryService.saveEntry(myEntry, userName);
         return myEntry;

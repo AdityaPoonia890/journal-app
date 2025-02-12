@@ -1,10 +1,12 @@
 package com.aditya.journalApp.entity;
 
+import com.aditya.journalApp.enums.Sentiment;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,10 +15,10 @@ import java.util.Date;
 public class JournalEntry {
     @Id
     private ObjectId id;
-
     private String title;
     private String content;
-    private Date date;
+    private LocalDateTime date;
+    private String sentiment;
 
   /*  @Override
     public String toString() {

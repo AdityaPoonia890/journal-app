@@ -4,7 +4,7 @@ import { signup } from '../service/UserService';
 import {useParams} from 'react-router-dom';
 
 
-const CreateUser = () => {
+const CreateUser = ({onSubmit}) => {
 
     const [userName,setUserName] = useState("");
     const [password,setPassword] = useState("");
@@ -55,8 +55,12 @@ const CreateUser = () => {
           
           const user = {userName, password, email, sentimentAnalysis};
           signup(user).then(
-            (Response) => alert("user created successfully"+ Response.data)
-          ).catch(error => console.log(error))
+            (Response) => {alert("user created successfully"+ Response.data)
+              onSubmit();
+          }
+          ).catch(error => {console.log(error)
+            alert("user creation failed" + error)
+          })
         }
     }
 

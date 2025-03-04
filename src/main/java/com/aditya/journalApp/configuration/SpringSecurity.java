@@ -25,6 +25,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -43,19 +49,57 @@ public class SpringSecurity  {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 
-        return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/journal/**", "/user/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                        .httpBasic(Customizer.withDefaults())
-                        .csrf(AbstractHttpConfigurer::disable)
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                        .build();
+//        return http
+//
+//
+//                .authorizeHttpRequests(request -> request
+//                        .requestMatchers("/public/**").permitAll()
+//                        .requestMatchers("/journal/**", "/user/**").authenticated()
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated())
+//                        .httpBasic(Customizer.withDefaults())
+//                        .csrf(AbstractHttpConfigurer::disable)
+//                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+//                        .build();
+        http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for API calls
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use custom CORS config
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/public/**").permitAll() // Public APIs (Signup/Login)
+                        .requestMatchers("/journal/**", "/user/**").authenticated() // Protected APIs
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin APIs
+                        .anyRequest().authenticated() // Secure all other endpoints
+                )
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Use stateless session
+                .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
-
+        return http.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true); // Required for JWT authentication
+
+        // ✅ Use allowedOriginPatterns() instead of allowedOrigins()
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+
+        // ✅ Allow common HTTP methods
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // ✅ Allow required headers
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+
+        // ✅ Expose Authorization header for JWT
+        config.setExposedHeaders(List.of("Authorization"));
+
+        // ✅ Register this configuration for all API endpoints
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
 
 
     @Bean

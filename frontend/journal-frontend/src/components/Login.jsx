@@ -38,7 +38,7 @@ const Login = ({onSubmit}) => {
             const user = {userName, password};
             login(user).then(
                 (Response) => {alert("logged-in successfully")                   
-                    onSubmit();
+                    onSubmit(userName);
                     console.log(Response.data)
                     localStorage.setItem('token', Response.data)
                 }

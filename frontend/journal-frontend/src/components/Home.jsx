@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { greet } from '../service/UserService'
 
-const Home = ({userName}) => {
+const Home = () => {
 
     const [greetMessage, setGreetMessage] = useState("");
 
@@ -15,7 +15,7 @@ const Home = ({userName}) => {
 
   return (
     <>
-        <h2>Home</h2>
+        <h2></h2>
         <h3>{greetMessage}</h3>
     </>
   )

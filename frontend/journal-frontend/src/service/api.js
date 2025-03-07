@@ -1,14 +1,10 @@
-import axios from 'axios';
-
-const BASE_API_URL = "http://localhost:8080"
+/*import axios from 'axios';
 
 // Create an instance of axios
-
 const api = axios.create({
-    baseURL: BASE_API_URL,
-    timeout: 10000,
-    headers: { "Content-Type": "application/json" },
-    withCredentials: true, // ✅ Required for JWT authentication
+    baseURL: 'https://api.example.com', // Replace with your API base URL
+    timeout: 1000,
+    headers: { 'Content-Type': 'application/json' }
 });
 
 // Add a request interceptor
@@ -29,7 +25,7 @@ api.interceptors.request.use(
 );
 
 // Add a response interceptor
-/*api.interceptors.response.use(
+api.interceptors.response.use(
     function (response) {
         // Do something with response data
         return response;  
@@ -38,29 +34,6 @@ api.interceptors.request.use(
         // Do something with response error
         return Promise.reject(error);
     }
-);*/
+);
 
-
-export const signup = (user) => {
-    return axios.post(BASE_API_URL+"/public/signup", user);
-}
-
-export const login = (user) => {
-    return axios.post(BASE_API_URL+"/public/login", user);
-}
-
-export const greet = () => {
-    return api.get("/user");
-}  
-
-export const updateUser = (user) => {
-    return api.put("/user", user);
-}
-
-export const deleteUser = () => {
-    return api.delete("/user");
-}
-
-export const getUser = (userName) => {
-    return api.get("/user/"+ userName);
-}
+export default api;*/

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { signup } from '../service/UserService';
+import { getUser, signup } from '../service/UserService';
 import {useParams} from 'react-router-dom';
+import { updateUser } from '../service/UserService';
 
 
-const CreateUser = ({onSubmit}) => {
+const CreateUser = ({onSubmit, update, name}) => {
 
     const [userName,setUserName] = useState("");
     const [password,setPassword] = useState("");
@@ -17,11 +18,22 @@ const CreateUser = ({onSubmit}) => {
         email:""
     })
 
-    const {id} = useParams();
+    
 
     useEffect(()=>{
-      if (id) {
+      if (update) {
+        getUser(name).then(
+          (Response) => {
+            const user = Response.data;
+            setUserName(user.userName); 
+            
+            setEmail(user.email);
+            setSentimentAnalyse(user.sentimentAnalysis);
 
+          }
+        ).catch(error => {
+          console.log(error)
+        })
       }
     }, [])
 
@@ -52,20 +64,34 @@ const CreateUser = ({onSubmit}) => {
     const onSubmitHandle = (e) => {
         e.preventDefault();
         if (validate()) {
-          
-          const user = {userName, password, email, sentimentAnalysis};
-          signup(user).then(
-            (Response) => {alert("user created successfully"+ Response.data)
+
+          if (update) {
+            const user = {userName, password, email, sentimentAnalysis};
+            updateUser(user).then(
+              (Response) => {alert("user updated successfully"+ Response.data)
               onSubmit();
+              }
+            ).catch(error => {console.log(error)
+              alert("user updation failed" + error)
+          } 
+        )}
+          else {
+            const user = {userName, password, email, sentimentAnalysis};
+            signup(user).then(
+             (Response) => {alert("user created successfully"+ Response.data)
+              onSubmit();
+             }
+            ).catch(error => {console.log(error)
+              alert("user creation failed" + error)
+            })
           }
-          ).catch(error => {console.log(error)
-            alert("user creation failed" + error)
-          })
+          
+          
         }
     }
 
     const title = () => {
-      if (id) {
+      if (update) {
         return <div className='h2 text-center'>Update User</div>
       } else {
         return <div className='h2 text-center'>Create user</div>

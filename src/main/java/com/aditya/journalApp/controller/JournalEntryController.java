@@ -49,7 +49,7 @@ public class JournalEntryController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("id/{myId}")
+    @GetMapping("/id/{myId}")
     public ResponseEntity<?> getJournalEntryById(@PathVariable ObjectId myId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -58,8 +58,10 @@ public class JournalEntryController {
         List<JournalEntry> collect = user.getJournalEntries().stream().filter(x -> x.getId().equals(myId)).collect(Collectors.toList());
 
         if (!collect.isEmpty()) {
-            return new ResponseEntity<>(journalEntryService.findById(myId), HttpStatus.FOUND);
+            // return new ResponseEntity<>(journalEntryService.findById(myId), HttpStatus.FOUND);
+             return new ResponseEntity<>(collect.get(0), HttpStatus.OK);
         }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }

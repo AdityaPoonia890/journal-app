@@ -2,7 +2,9 @@ import { useState } from 'react'
 import CreateUser from './components/CreateUser'
 import Login from './components/Login'
 import Home from './components/Home'
-import { deleteUser, updateUser } from './service/UserService';
+import Journals from './components/Journals'
+import { deleteUser, getJournalById, getJournals, updateUser } from './service/UserService';
+import Input from './components/Input'
 //import './App.css'
 
 function App() {
@@ -12,6 +14,9 @@ function App() {
     const [showSignup, setShowSignup] = useState(false);
     const [userName, setUserName] = useState("");
     const [updateUser, setUpdateUser] = useState(false);
+    const [showAllJournals, setShowAllJournals] = useState(false);
+    const [journals, setJournals] = useState([]);
+    const [showJournal, setShowJournal] = useState(false);
 
 
     const handleFormSubmit = (userName) => {
@@ -27,6 +32,7 @@ function App() {
         setUserName("");
         localStorage.removeItem('token');
         setUpdateUser(false);
+        setShowAllJournals(false);
     } 
 
     const handleLoginClick = () => {
@@ -56,6 +62,40 @@ function App() {
 
   const handleUpdateUser = () => {
     setUpdateUser(true);
+  }
+
+  const getJournal = (id) => {
+
+    getJournalById(id).then(
+      (response) => {
+        setShowJournal(false);
+        setShowAllJournals(false);
+        setJournals([]);
+        getAllJournals([response.data]);
+      }
+    ).catch(error => 
+      console.log("error in get journal"+error)       
+    )
+  }
+  const getAllJournals = (journal) => {
+
+    if (journal) {
+      setJournals(journal);
+      setShowAllJournals(true
+      );
+
+    } else {
+      getJournals().then(
+        (response) => {
+          setJournals(response.data); // Update the state with the fetched journals
+          setShowAllJournals(true);
+        }
+      ).catch(error => {
+        console.log("error in get all journals"+error)
+      })
+
+    }
+    
   }
 
   return (
@@ -90,14 +130,14 @@ function App() {
       {showSignup ? <CreateUser onSubmit={handleFormSubmit}/> : null }
       {showLogin ? <Login onSubmit={handleFormSubmit}/> : null }
       {loggedIn ? 
-        <div className='row'>
+        <div className='row mb-5'>
           <div className='col-3'>
             <div className='list-group'>
               <button className='list-group-item list-group-item-action'>Write Journal</button>
               <button className='list-group-item list-group-item-action'>Delete Journal</button>
               <button className='list-group-item list-group-item-action'>Update Journal</button>
-              <button className='list-group-item list-group-item-action'>Get All Journals</button>
-              <button className='list-group-item list-group-item-action'>Get Journal by ID</button>
+              <button className='list-group-item list-group-item-action' onClick={() => getAllJournals()}>Get All Journals</button>
+              <button className='list-group-item list-group-item-action' onClick={() => setShowJournal(true)}>Get Journal by ID</button>
             </div>
           </div>
           <div className='col-9'>
@@ -108,6 +148,9 @@ function App() {
           </div>
         </div> : null}
         {updateUser ? <CreateUser onSubmit={handleFormSubmit} update={true} name={`${userName}`} /> : null}
+        {showJournal ? <Input onSubmitInput={getJournal} />: null}
+        {showAllJournals ? <Journals journals={journals} /> : null}.
+
         
     </div>
   )

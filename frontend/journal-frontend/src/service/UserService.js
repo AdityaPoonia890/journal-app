@@ -64,3 +64,15 @@ export const deleteUser = () => {
 export const getUser = (userName) => {
     return api.get("/user/"+ userName);
 }
+
+export const postJournal = (journal) => {
+    return api.post("/journal", journal);
+}
+
+export const getJournals = () => {
+    return api.get("/journal");
+}
+
+export const getJournalById = (id) => {
+    return api.get("/journal/id/"+id);
+}

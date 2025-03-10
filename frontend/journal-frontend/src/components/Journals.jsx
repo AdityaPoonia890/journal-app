@@ -1,6 +1,11 @@
 import React from 'react'
 
 const Journals = ({journals}) => {
+
+  const  handleEdit = (id) => {
+    console.log(id);
+    
+  }
   return (
     <div className="container">
     <div className="row">
@@ -12,7 +17,10 @@ const Journals = ({journals}) => {
               <p className="card-text">{journal.content}</p>
              
               <p className="card-text"><small className="text-muted">Last updated: {journal.date}</small></p>
-              <button className="btn btn-primary">Edit</button>
+              <button className="btn btn-primary"
+                      onClick={()=>handleEdit(journal.id)}>
+                        Edit
+              </button>
               <button className="btn btn-danger ms-2">Delete</button>
             </div>
           </div>

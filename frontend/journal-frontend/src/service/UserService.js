@@ -76,3 +76,4 @@ export const getJournals = () => {
 export const getJournalById = (id) => {
     return api.get("/journal/id/"+id);
 }
+

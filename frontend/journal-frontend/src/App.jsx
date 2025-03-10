@@ -5,6 +5,7 @@ import Home from './components/Home'
 import Journals from './components/Journals'
 import { deleteUser, getJournalById, getJournals, updateUser } from './service/UserService';
 import Input from './components/Input'
+import CreateJournal from './components/CreateJournal'
 //import './App.css'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     const [showAllJournals, setShowAllJournals] = useState(false);
     const [journals, setJournals] = useState([]);
     const [showJournal, setShowJournal] = useState(false);
+    const [postJournal, setPostJournal] = useState(false);
 
 
     const handleFormSubmit = (userName) => {
@@ -61,11 +63,13 @@ function App() {
   }
 
   const handleUpdateUser = () => {
+    setShowAllJournals(false);
+    setShowJournal(false);
     setUpdateUser(true);
   }
 
   const getJournal = (id) => {
-
+    setUpdateUser(false);
     getJournalById(id).then(
       (response) => {
         setShowJournal(false);
@@ -78,13 +82,19 @@ function App() {
     )
   }
   const getAllJournals = (journal) => {
+    
+    setUpdateUser(false);
+    setShowJournal(false);
+    setPostJournal(false);
 
     if (journal) {
       setJournals(journal);
       setShowAllJournals(true
       );
+      
 
     } else {
+      
       getJournals().then(
         (response) => {
           setJournals(response.data); // Update the state with the fetched journals
@@ -96,6 +106,14 @@ function App() {
 
     }
     
+  }
+
+  const handleWriteJournal = () => {
+    setUpdateUser(false);
+    setShowAllJournals(false);
+    setShowJournal(false);
+    setPostJournal(true);
+
   }
 
   return (
@@ -133,7 +151,7 @@ function App() {
         <div className='row mb-5'>
           <div className='col-3'>
             <div className='list-group'>
-              <button className='list-group-item list-group-item-action'>Write Journal</button>
+              <button className='list-group-item list-group-item-action' onClick={()=> handleWriteJournal()}>Write Journal</button>
               <button className='list-group-item list-group-item-action'>Delete Journal</button>
               <button className='list-group-item list-group-item-action'>Update Journal</button>
               <button className='list-group-item list-group-item-action' onClick={() => getAllJournals()}>Get All Journals</button>
@@ -150,7 +168,7 @@ function App() {
         {updateUser ? <CreateUser onSubmit={handleFormSubmit} update={true} name={`${userName}`} /> : null}
         {showJournal ? <Input onSubmitInput={getJournal} />: null}
         {showAllJournals ? <Journals journals={journals} /> : null}.
-
+        {postJournal ? <CreateJournal  /> : null}
         
     </div>
   )

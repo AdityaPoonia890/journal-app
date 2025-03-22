@@ -50,7 +50,7 @@ public class JournalEntryController {
     }
 
     @GetMapping("/id/{myId}")
-    public ResponseEntity<?> getJournalEntryById(@PathVariable ObjectId myId) {
+    public ResponseEntity<?> getJournalEntryById(@PathVariable Integer myId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
@@ -89,7 +89,7 @@ public class JournalEntryController {
 
 
    @PutMapping("/id/{id}")
-    public ResponseEntity<?> updateJournalById(@PathVariable ObjectId id, @RequestBody JournalEntry newEntry) {
+    public ResponseEntity<?> updateJournalById(@PathVariable Integer id, @RequestBody JournalEntry newEntry) {
 
        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
        String userName = authentication.getName();
@@ -107,7 +107,8 @@ public class JournalEntryController {
                oldEntry.setContent(newEntry.getContent() != null && !newEntry.getContent().equals("") ? newEntry.getContent() : oldEntry.getContent());
                oldEntry.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : oldEntry.getTitle());
 
-               journalEntryService.saveEntry(oldEntry, userName);
+               journalEntryService.saveEntry(oldEntry);
+               System.out.println(oldEntry);
                return new ResponseEntity<>(oldEntry, HttpStatus.OK);
            }
 
@@ -118,7 +119,7 @@ public class JournalEntryController {
     }
 
     @DeleteMapping("id/{myId}")
-    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId myId) throws Exception {
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable Integer myId) throws Exception {
         journalEntryService.deleteById(myId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

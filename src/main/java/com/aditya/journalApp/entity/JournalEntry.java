@@ -14,7 +14,7 @@ import java.util.Date;
 @Document("journal_entries")
 public class JournalEntry {
     @Id
-    private ObjectId id;
+    private Integer id;
     private String title;
     private String content;
     private LocalDateTime date;

@@ -20,10 +20,14 @@ public class JournalEntryService {
     JournalEntryRepo journalEntryRepo;
     @Autowired
     UserService userService;
+    @Autowired
+    SequenceGeneratorService sequenceGeneratorService;
 
     @Transactional
     public void saveEntry(JournalEntry myEntry, String userName) {
         try{
+           myEntry.setId(sequenceGeneratorService.getNextSequence("journal_entries"));
+
             User user = userService.findByUserName(userName);
             JournalEntry savedEntry = journalEntryRepo.save(myEntry);
             // user.setUserName(null);
@@ -36,16 +40,21 @@ public class JournalEntryService {
 
     }
 
+    public void saveEntry(JournalEntry updatedEntry) {
+
+        journalEntryRepo.save(updatedEntry);
+    }
+
     public List<JournalEntry> getAll() {
         return journalEntryRepo.findAll();
     }
 
-    public Optional<JournalEntry> findById(ObjectId id) {
+    public Optional<JournalEntry> findById(Integer id) {
         return journalEntryRepo.findById(id);
     }
 
     @Transactional
-    public void deleteById(ObjectId id) throws Exception {
+    public void deleteById(Integer id) throws Exception {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String userName = authentication.getName();

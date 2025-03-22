@@ -19,6 +19,8 @@ function App() {
     const [journals, setJournals] = useState([]);
     const [showJournal, setShowJournal] = useState(false);
     const [postJournal, setPostJournal] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [id, setId] = useState(null);
 
 
     const handleFormSubmit = (userName) => {
@@ -116,6 +118,22 @@ function App() {
 
   }
 
+  const postSubmit = () => {
+    setEdit(false);
+    setPostJournal(false);
+    getAllJournals();
+  }
+
+  const handleEdit = (id) => {
+    console.log(id);
+    setShowAllJournals(false);
+    setUpdateUser(false);
+    setShowJournal(false);
+    setEdit(true);
+    setId(id);
+    setPostJournal(true);
+  }
+
   return (
     <div className='container-fluid'>
       <div className='row align-items-center py-3 mb-4 bg-primary text-white rounded'>
@@ -153,7 +171,7 @@ function App() {
             <div className='list-group'>
               <button className='list-group-item list-group-item-action' onClick={()=> handleWriteJournal()}>Write Journal</button>
               <button className='list-group-item list-group-item-action'>Delete Journal</button>
-              <button className='list-group-item list-group-item-action'>Update Journal</button>
+              <button className='list-group-item list-group-item-action' >Update Journal</button>
               <button className='list-group-item list-group-item-action' onClick={() => getAllJournals()}>Get All Journals</button>
               <button className='list-group-item list-group-item-action' onClick={() => setShowJournal(true)}>Get Journal by ID</button>
             </div>
@@ -167,8 +185,8 @@ function App() {
         </div> : null}
         {updateUser ? <CreateUser onSubmit={handleFormSubmit} update={true} name={`${userName}`} /> : null}
         {showJournal ? <Input onSubmitInput={getJournal} />: null}
-        {showAllJournals ? <Journals journals={journals} /> : null}.
-        {postJournal ? <CreateJournal  /> : null}
+        {showAllJournals ? <Journals journals={journals} handleEditRef = {handleEdit}/> : null}.
+        {postJournal && (<CreateJournal  onSubmit={postSubmit} id = {edit ? id : null}/> )}
         
     </div>
   )

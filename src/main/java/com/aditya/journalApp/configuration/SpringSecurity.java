@@ -49,19 +49,7 @@ public class SpringSecurity  {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 
-//        return http
-//
-//
-//                .authorizeHttpRequests(request -> request
-//                        .requestMatchers("/public/**").permitAll()
-//                        .requestMatchers("/journal/**", "/user/**").authenticated()
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .anyRequest().authenticated())
-//                        .httpBasic(Customizer.withDefaults())
-//                        .csrf(AbstractHttpConfigurer::disable)
-//                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-//                        .build();
+
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for API calls
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use custom CORS config

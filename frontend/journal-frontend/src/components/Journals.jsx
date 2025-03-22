@@ -1,15 +1,17 @@
 import React from 'react'
 
-const Journals = ({journals}) => {
+const Journals = ({journals, handleEditRef}) => {
 
   const  handleEdit = (id) => {
-    console.log(id);
-    
+    const objectId = id;
+    const stringId = objectId.toString();
+    console.log(stringId);
+    handleEditRef(stringId);  
   }
   return (
     <div className="container">
     <div className="row">
-      {journals.map((journal, index) => (
+      {journals && journals.map((journal, index) => (
         <div className="col-md-4 mb-4" key={index}>
           <div className="card">
             <div className="card-body">

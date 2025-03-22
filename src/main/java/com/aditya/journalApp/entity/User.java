@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @Document(collection = "users")
 public class User {
     @Id
-    private ObjectId id;
+    private Integer id;
 
     @Indexed(unique = true)
     @NonNull

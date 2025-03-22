@@ -38,6 +38,7 @@ public class PublicController {
 
     @PostMapping("/signup") //create-user
     public void createUser(@RequestBody User user) {
+
         userService.saveNewUser(user);
     }
 
@@ -61,7 +62,7 @@ public class PublicController {
         }
         catch (Exception e){
             log.error("error while logging in :" + e);
-            return new ResponseEntity<>("error"+e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("error "+e, HttpStatus.BAD_REQUEST);
         }
     }
 }

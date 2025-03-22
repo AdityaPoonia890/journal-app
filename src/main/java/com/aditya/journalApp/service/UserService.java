@@ -19,11 +19,15 @@ public class UserService {
     static final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
+
+    @Autowired
     UserRepo userRepo;
 
     public void saveNewUser(User user) {
 
         //PasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setId(sequenceGeneratorService.getNextSequence("users"));
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRoles(Arrays.asList("USER"));
         userRepo.save(user);
@@ -47,7 +51,7 @@ public class UserService {
         return userRepo.findByUserName(userName);//.orElse(null);
     }
 
-    public void deleteById(ObjectId id) {
+    public void deleteById(Integer id) {
         User entry = userRepo.findById(id).orElse(null);
         userRepo.delete(entry);
 

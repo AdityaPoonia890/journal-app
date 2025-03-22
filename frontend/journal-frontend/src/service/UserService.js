@@ -49,6 +49,8 @@ export const login = (user) => {
     return axios.post(BASE_API_URL+"/public/login", user);
 }
 
+
+
 export const greet = () => {
     return api.get("/user");
 }  
@@ -77,3 +79,6 @@ export const getJournalById = (id) => {
     return api.get("/journal/id/"+id);
 }
 
+export const updateJournal = (id, journal) => {
+    return api.put("/journal/id/"+id, journal);
+}

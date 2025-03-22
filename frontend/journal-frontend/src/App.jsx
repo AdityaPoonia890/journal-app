@@ -3,7 +3,7 @@ import CreateUser from './components/CreateUser'
 import Login from './components/Login'
 import Home from './components/Home'
 import Journals from './components/Journals'
-import { deleteUser, getJournalById, getJournals, updateUser } from './service/UserService';
+import { deleteJOurnal, deleteUser, getJournalById, getJournals, updateUser } from './service/UserService';
 import Input from './components/Input'
 import CreateJournal from './components/CreateJournal'
 //import './App.css'
@@ -134,6 +134,18 @@ function App() {
     setPostJournal(true);
   }
 
+  const handleDelete = (id) => {
+    deleteJOurnal(id).then(
+      (response) => {
+        alert("Journal deleted successfully")
+        getAllJournals();
+      }
+    ).catch(error => {
+      console.log("error in delete journal"+error)
+    }
+    )
+  }
+
   return (
     <div className='container-fluid'>
       <div className='row align-items-center py-3 mb-4 bg-primary text-white rounded'>
@@ -169,11 +181,14 @@ function App() {
         <div className='row mb-5'>
           <div className='col-3'>
             <div className='list-group'>
-              <button className='list-group-item list-group-item-action' onClick={()=> handleWriteJournal()}>Write Journal</button>
-              <button className='list-group-item list-group-item-action'>Delete Journal</button>
-              <button className='list-group-item list-group-item-action' >Update Journal</button>
+ {/*             <button className='list-group-item list-group-item-action' onClick={()=> handleWriteJournal()}>Write Journal</button>
+
               <button className='list-group-item list-group-item-action' onClick={() => getAllJournals()}>Get All Journals</button>
-              <button className='list-group-item list-group-item-action' onClick={() => setShowJournal(true)}>Get Journal by ID</button>
+              <button className='list-group-item list-group-item-action' onClick={() => setShowJournal(true)}>Get Journal by ID</button>*/}
+<button className='btn btn-primary mb-1' onClick={()=> handleWriteJournal()}>Write Journal</button>
+
+<button className='btn btn-primary mb-1' onClick={() => getAllJournals()}>Get All Journals</button>
+<button className='btn btn-primary mb-1' onClick={() => setShowJournal(true)}>Get Journal by ID</button>
             </div>
           </div>
           <div className='col-9'>
@@ -185,7 +200,7 @@ function App() {
         </div> : null}
         {updateUser ? <CreateUser onSubmit={handleFormSubmit} update={true} name={`${userName}`} /> : null}
         {showJournal ? <Input onSubmitInput={getJournal} />: null}
-        {showAllJournals ? <Journals journals={journals} handleEditRef = {handleEdit}/> : null}.
+        {showAllJournals ? <Journals journals={journals} handleEditRef = {handleEdit} handleDeleteRef={handleDelete}/> : null}.
         {postJournal && (<CreateJournal  onSubmit={postSubmit} id = {edit ? id : null}/> )}
         
     </div>

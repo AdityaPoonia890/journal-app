@@ -1,12 +1,14 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { getJournalById, postJournal, updateJournal } from '../service/UserService';
 
 const CreateJournal = ({onSubmit, id}) => {
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
+  useEffect(() => {
     if (id) {
+      console.log("before setting title and content");
       getJournalById(id).then(
         (response) => {
           setTitle(response.data.title);
@@ -15,6 +17,8 @@ const CreateJournal = ({onSubmit, id}) => {
       ).catch(error => console.log("error while getting journal by id for updation, " + error));
     }
 
+  }, []);
+      
     const handleSubmit = (e) => {
 
       if (id) {

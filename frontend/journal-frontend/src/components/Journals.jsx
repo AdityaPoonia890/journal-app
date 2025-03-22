@@ -1,13 +1,15 @@
 import React from 'react'
 
-const Journals = ({journals, handleEditRef}) => {
+const Journals = ({journals, handleEditRef, handleDeleteRef}) => {
 
   const  handleEdit = (id) => {
-    const objectId = id;
-    const stringId = objectId.toString();
-    console.log(stringId);
-    handleEditRef(stringId);  
+    handleEditRef(id);  
   }
+
+  const handleDelete = (id) => {
+    handleDeleteRef(id);
+  }
+
   return (
     <div className="container">
     <div className="row">
@@ -23,7 +25,11 @@ const Journals = ({journals, handleEditRef}) => {
                       onClick={()=>handleEdit(journal.id)}>
                         Edit
               </button>
-              <button className="btn btn-danger ms-2">Delete</button>
+
+              <button className="btn btn-danger ms-2"
+                      onClick={() => handleDelete(journal.id)}>
+                Delete
+              </button>
             </div>
           </div>
         </div>

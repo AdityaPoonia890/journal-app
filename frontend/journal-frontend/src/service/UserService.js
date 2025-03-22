@@ -82,3 +82,7 @@ export const getJournalById = (id) => {
 export const updateJournal = (id, journal) => {
     return api.put("/journal/id/"+id, journal);
 }
+
+export const deleteJOurnal = (id) => {
+    return api.delete("/journal/id/" + id);
+}

@@ -19,6 +19,15 @@ const Journals = ({journals, handleEditRef, handleDeleteRef}) => {
             <div className="card-body">
               <h5 className="card-title">{journal.title}</h5>
               <p className="card-text">{journal.content}</p>
+              <div>
+              {journal.base64Image && (
+                            <img 
+                                src={`data:image/jpeg;base64,${journal.base64Image}`} 
+                                alt="Journal Image" 
+                                style={{ maxWidth: "300px", height: "auto" }}
+                            />
+                        )}
+              </div>
              
               <p className="card-text"><small className="text-muted">Last updated: {journal.date}</small></p>
               <button className="btn btn-primary"

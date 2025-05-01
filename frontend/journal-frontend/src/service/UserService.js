@@ -7,7 +7,7 @@ const BASE_API_URL = "http://localhost:8080"
 const api = axios.create({
     baseURL: BASE_API_URL,
     timeout: 10000,
-    headers: { "Content-Type": "application/json" },
+    
     withCredentials: true, // ✅ Required for JWT authentication
 });
 
@@ -68,7 +68,18 @@ export const getUser = (userName) => {
 }
 
 export const postJournal = (journal) => {
-    return api.post("/journal", journal);
+    const formData = new FormData();
+    formData.append("title", journal.title);
+    formData.append("content", journal.content);
+    if (journal.image) {
+        formData.append("image", journal.image); // Assuming `journal.image` is a File object
+    }
+
+    return api.post("/journal", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',  // This is handled automatically by axios, so you can omit it
+        }
+    });
 }
 
 export const getJournals = () => {
@@ -80,7 +91,18 @@ export const getJournalById = (id) => {
 }
 
 export const updateJournal = (id, journal) => {
-    return api.put("/journal/id/"+id, journal);
+    const formData = new FormData();
+    formData.append("title", journal.title);
+    formData.append("content", journal.content);
+    if (journal.image) {
+        formData.append("image", journal.image);  // Assuming `journal.image` is a File object
+    }
+
+    return api.put(`/journal/id/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',  // This is handled automatically by axios, so you can omit it
+        }
+    });
 }
 
 export const deleteJOurnal = (id) => {

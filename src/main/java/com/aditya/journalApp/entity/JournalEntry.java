@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+
+
 @Data
 @NoArgsConstructor//@AllArgsConstructor@RequiredArgsConstructor
 @Document("journal_entries")
@@ -20,45 +22,9 @@ public class JournalEntry {
     private LocalDateTime date;
     private String sentiment;
 
-  /*  @Override
-    public String toString() {
-        return "JournalEntry{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", date=" + date +
-                '}';
-    }
+    private byte[] imageData;
 
-    public Date getDate() {
-        return date;
-    }
+    private String base64Image;
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }*/
 }

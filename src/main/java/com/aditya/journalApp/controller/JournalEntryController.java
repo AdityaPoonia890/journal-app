@@ -11,12 +11,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.bson.types.ObjectId;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Base64;
 
 @RestController
 @RequestMapping("/journal")
@@ -35,19 +37,29 @@ public class JournalEntryController {
    }
    */
 
+
+
     @GetMapping()
     public ResponseEntity<?> getAllJournalEntriesOfUser() {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
         User user = userService.findByUserName(userName);
-        List all = user.getJournalEntries();
+        List<JournalEntry> all = user.getJournalEntries();
         if (all != null && !all.isEmpty()) {
-            return new ResponseEntity<>(all , HttpStatus.OK);
+            // Convert the byte[] image data to a Base64 string for each journal entry
+            for (JournalEntry journalEntry : all) {
+                if (journalEntry.getImageData() != null) {
+                    // Convert byte[] to Base64 String
+                    String base64Image = Base64.getEncoder().encodeToString(journalEntry.getImageData());
+                    journalEntry.setBase64Image(base64Image); // Assuming you added a setter for base64Image in JournalEntry
+                }
+            }
+            return new ResponseEntity<>(all, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
     @GetMapping("/id/{myId}")
     public ResponseEntity<?> getJournalEntryById(@PathVariable Integer myId) {
@@ -58,7 +70,12 @@ public class JournalEntryController {
         List<JournalEntry> collect = user.getJournalEntries().stream().filter(x -> x.getId().equals(myId)).collect(Collectors.toList());
 
         if (!collect.isEmpty()) {
-            // return new ResponseEntity<>(journalEntryService.findById(myId), HttpStatus.FOUND);
+
+            if (collect.get(0).getImageData() != null) {
+                // Convert byte[] to Base64 String
+                String base64Image = Base64.getEncoder().encodeToString(collect.get(0).getImageData());
+                collect.get(0).setBase64Image(base64Image); // Assuming you added a setter for base64Image in JournalEntry
+            }
              return new ResponseEntity<>(collect.get(0), HttpStatus.OK);
         }
 
@@ -73,17 +90,33 @@ public class JournalEntryController {
     }*/
 
     @PostMapping
-    public JournalEntry createEntry(@RequestBody JournalEntry myEntry ) {
+    public JournalEntry createEntry(    @RequestPart("title") String title,
+                                        @RequestPart("content") String content,
+                                        @RequestPart("image") MultipartFile image ) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        System.out.println("Received Journal Entry: " + myEntry);
+        System.out.println("Received Journal Entry: " + title + "," + content + "," + image);
 
-       if (myEntry.getDate() == null) {
-            myEntry.setDate(LocalDateTime.now()); // Set current date if none provided
+        try {
+            // Convert the image file to byte[]
+            byte[] imageData = image.getBytes();
+
+            // Create the journal entry
+            JournalEntry myEntry = new JournalEntry();
+            myEntry.setTitle(title);
+            myEntry.setContent(content);
+            myEntry.setImageData(imageData);   // Set the image data as byte[]
+            myEntry.setDate(LocalDateTime.now());  // Set current date if none provided
+
+            // Save the entry (service logic)
+            journalEntryService.saveEntry(myEntry, userName);
+
+            return myEntry;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;  // Handle exception as needed
         }
-        journalEntryService.saveEntry(myEntry, userName);
-        return myEntry;
     }
 
 

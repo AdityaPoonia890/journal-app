@@ -1,4 +1,3 @@
-# Place this Dockerfile in your root directory
 FROM openjdk:21-jdk-slim
 
 WORKDIR /app
@@ -19,8 +18,11 @@ COPY src ./src
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
+# Find and rename the JAR file to app.jar for easier reference
+RUN find target -name "*.jar" -exec cp {} app.jar \;
+
 # Expose port
 EXPOSE 8080
 
 # Run the application
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["java", "-jar", "app.jar"]

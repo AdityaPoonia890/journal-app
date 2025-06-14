@@ -4,7 +4,7 @@ import com.aditya.journalApp.entity.User;
 import com.aditya.journalApp.entity.Weather;
 import com.aditya.journalApp.repository.UserRepoImpl;
 import com.aditya.journalApp.service.UserService;
-import com.aditya.journalApp.service.WeatherService;
+//import com.aditya.journalApp.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

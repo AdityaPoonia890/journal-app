@@ -1,6 +1,6 @@
 package com.aditya.journalApp.controller;
 
-import com.aditya.journalApp.cache.AppCache;
+//import com.aditya.journalApp.cache.AppCache;
 import com.aditya.journalApp.entity.User;
 import com.aditya.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ public class AdminController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    AppCache appCache;
+//
+//    @Autowired
+//    AppCache appCache;
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
@@ -43,8 +43,8 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("clear-app-cache")
-    public void clearAppCache() {
-        appCache.init();
-    }
+//    @GetMapping("clear-app-cache")
+//    public void clearAppCache() {
+//        appCache.init();
+//    }
 }

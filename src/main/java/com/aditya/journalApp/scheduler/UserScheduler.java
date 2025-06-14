@@ -1,4 +1,4 @@
-package com.aditya.journalApp.scheduler;
+/*package com.aditya.journalApp.scheduler;
 
 import com.aditya.journalApp.cache.AppCache;
 import com.aditya.journalApp.entity.JournalEntry;
@@ -69,4 +69,4 @@ public class UserScheduler {
 //    public void clearAppCache() {
 //        appCache.init();
 //    }
-}
+}*/

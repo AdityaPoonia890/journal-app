@@ -22,8 +22,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    WeatherService weatherService;
+//    @Autowired
+//    WeatherService weatherService;
 
     @Autowired
     UserRepoImpl userRepoImpl;

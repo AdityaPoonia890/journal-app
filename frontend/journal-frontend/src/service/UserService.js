@@ -41,6 +41,28 @@ api.interceptors.request.use(
     }
 );*/
 
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            const errorCode = error.response?.data?.code;
+            
+            if (errorCode === 'TOKEN_EXPIRED' || errorCode === 'INVALID_TOKEN') {
+                // Clear stored tokens
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                
+                // Redirect to login
+                //window.location.href = '/login';
+                
+                // Optional: Show a message
+                alert('Your session has expired. Please logout and login again.');
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
 
 export const signup = (user) => {
     return api.post(BASE_API_URL+"/public/signup", user);

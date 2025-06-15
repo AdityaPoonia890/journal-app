@@ -71,7 +71,7 @@ public class SpringSecurity  {
         config.setAllowCredentials(true); // Required for JWT authentication
 
         // ✅ Use allowedOriginPatterns() instead of allowedOrigins()
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173","https://journal-app-snowy-two.vercel.app"));
 
         // ✅ Allow common HTTP methods
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

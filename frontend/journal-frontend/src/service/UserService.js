@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_API_URL = "http://localhost:8080"
+const BASE_API_URL = import.meta.env.AXIOS_BASE_URL || "https://journal-app-1-pge0.onrender.com";
+//https://journal-app-1-pge0.onrender.com
 
 // Create an instance of axios
 
@@ -42,11 +43,11 @@ api.interceptors.request.use(
 
 
 export const signup = (user) => {
-    return axios.post(BASE_API_URL+"/public/signup", user);
+    return api.post(BASE_API_URL+"/public/signup", user);
 }
 
 export const login = (user) => {
-    return axios.post(BASE_API_URL+"/public/login", user);
+    return api.post(BASE_API_URL+"/public/login", user);
 }
 
 

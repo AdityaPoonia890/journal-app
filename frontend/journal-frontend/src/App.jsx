@@ -24,7 +24,7 @@ function App() {
 
 
     const handleFormSubmit = (userName) => {
-        setLoggedIn(true);
+        setLoggedIn(false);
         setShowLogin(false);
         setShowSignup(false);
         setUserName(userName);

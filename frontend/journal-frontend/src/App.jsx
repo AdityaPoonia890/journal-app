@@ -22,9 +22,19 @@ function App() {
     const [edit, setEdit] = useState(false);
     const [id, setId] = useState(null);
 
-
-    const handleFormSubmit = (userName) => {
+    const handleSignup = () => {
+        setShowLogin(false);
+        setShowSignup(false);
         setLoggedIn(false);
+        setUpdateUser(false);
+        setShowAllJournals(false);
+        setShowJournal(false);
+        setPostJournal(false);
+        }
+
+
+    const handleLogin = (userName) => {
+        setLoggedIn(true);
         setShowLogin(false);
         setShowSignup(false);
         setUserName(userName);
@@ -175,8 +185,8 @@ function App() {
         </div>
       </div>
     
-      {showSignup ? <CreateUser onSubmit={handleFormSubmit}/> : null }
-      {showLogin ? <Login onSubmit={handleFormSubmit}/> : null }
+      {showSignup ? <CreateUser onSubmit={handleSignup}/> : null }
+      {showLogin ? <Login onSubmit={handleLogin}/> : null }
       {loggedIn ? 
         <div className='row mb-5'>
           <div className='col-3'>
@@ -198,7 +208,7 @@ function App() {
             </div>
           </div>
         </div> : null}
-        {updateUser ? <CreateUser onSubmit={handleFormSubmit} update={true} name={`${userName}`} /> : null}
+        {updateUser ? <CreateUser onSubmit={handleLogin} update={true} name={`${userName}`} /> : null}
         {showJournal ? <Input onSubmitInput={getJournal} />: null}
         {showAllJournals ? <Journals journals={journals} handleEditRef = {handleEdit} handleDeleteRef={handleDelete}/> : null}.
         {postJournal && (<CreateJournal  onSubmit={postSubmit} id = {edit ? id : null}/> )}

@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/health")
+@RestController  // ✅ No path here
 public class HealthController {
 
-    @GetMapping
-    public static ResponseEntity<HttpStatus> healthCheck() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/health")  // ✅ Path goes here
+    public ResponseEntity<String> healthCheck() {  // ✅ Non-static method, String response
+        return ResponseEntity.ok("UP");
     }
 }

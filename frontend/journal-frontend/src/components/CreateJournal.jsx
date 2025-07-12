@@ -77,7 +77,7 @@ const CreateJournal = ({ onSubmit, id }) => {
 
     // Make the POST request using axios
     axios
-      .post('http://localhost:8080/journal', formData, {
+      .post('https://journal-app-1-pge0.onrender.com/journal', formData, {
         headers: {
           'Authorization': `Bearer ${token}`, // Add Authorization header with JWT token
           // Don't set Content-Type manually for FormData - let axios set it with boundary

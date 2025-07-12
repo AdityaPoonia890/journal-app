@@ -44,10 +44,12 @@ const CreateJournal = ({ onSubmit, id }) => {
     } else {
       console.log('Creating new journal');
 
-      // If creating, send data via axios directly
+      // Use the same pattern as update - through service
+      // Or use the direct axios call with better error handling
       sendPostRequest(journalData, (error, response) => {
         if (error) {
-          alert('Failed to create journal: ' + error.message);
+          console.error('Error details:', error);
+          alert('Failed to create journal: ' + (error.response?.data?.message || error.message));
         } else {
           alert('Journal created successfully: ' + response.title);
           onSubmit();
@@ -58,6 +60,13 @@ const CreateJournal = ({ onSubmit, id }) => {
 
   // Function to send POST request via axios with a callback
   const sendPostRequest = (journalData, callback) => {
+    // Check if token exists
+    const token = localStorage.getItem('token');
+    if (!token) {
+      callback(new Error('No authentication token found. Please login again.'), null);
+      return;
+    }
+
     // Create a FormData instance to send data with the image file
     const formData = new FormData();
     formData.append('title', journalData.title);
@@ -70,8 +79,8 @@ const CreateJournal = ({ onSubmit, id }) => {
     axios
       .post('http://localhost:8080/journal', formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Add Authorization header with JWT token
-          'Content-Type': 'multipart/form-data', // Tell the server you're sending form data
+          'Authorization': `Bearer ${token}`, // Add Authorization header with JWT token
+          // Don't set Content-Type manually for FormData - let axios set it with boundary
         },
       })
       .then((response) => {
@@ -82,6 +91,19 @@ const CreateJournal = ({ onSubmit, id }) => {
       .catch((error) => {
         // If there's an error, invoke the callback with the error
         console.error('Error creating journal:', error);
+        
+        // Handle specific error cases
+        if (error.response) {
+          // Server responded with error status
+          console.error('Server error:', error.response.status, error.response.data);
+        } else if (error.request) {
+          // Request was made but no response received
+          console.error('Network error:', error.request);
+        } else {
+          // Something else happened
+          console.error('Error:', error.message);
+        }
+        
         callback(error, null); // Pass the error to the callback
       });
   };
@@ -101,6 +123,7 @@ const CreateJournal = ({ onSubmit, id }) => {
             onChange={(e) => setTitle(e.target.value)}
             aria-describedby="titleHelp"
             placeholder="Enter title"
+            required
           />
           <small id="titleHelp" className="form-text text-muted">
             Enter title for journal.
@@ -118,21 +141,28 @@ const CreateJournal = ({ onSubmit, id }) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Enter content"
+            required
           ></textarea>
         </div>
-        <div>
+        <div className="mb-3">
+          <label htmlFor="journalImage" className="form-label">
+            Image (optional)
+          </label>
           <input
             type="file"
             className="form-control"
             id="journalImage"
             onChange={(e) => setImage(e.target.files[0])}
             aria-describedby="imageHelp"
-            placeholder="Upload image"
+            accept="image/*"
           />
+          <small id="imageHelp" className="form-text text-muted">
+            Upload an image for your journal entry.
+          </small>
         </div>
 
         <button type="submit" className="btn btn-primary">
-          Submit
+          {id ? 'Update' : 'Create'} Journal
         </button>
       </form>
     </div>

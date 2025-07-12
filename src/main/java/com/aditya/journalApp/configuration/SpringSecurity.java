@@ -35,24 +35,23 @@ public class SpringSecurity {
     @Autowired
     JwtFilter jwtFilter;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       http
-            .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for API calls
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use custom CORS config
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/public/**").permitAll() // Public APIs (Signup/Login)
-                    .requestMatchers("/health", "/actuator/health").permitAll() // Health check endpoints
-                    .requestMatchers("/journal/**", "/user/**").authenticated() // Protected APIs
-                    .requestMatchers("/admin/**").hasRole("ADMIN") // Admin APIs
-                    .anyRequest().authenticated() // Secure all other endpoints
-            )
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Use stateless session
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for API calls
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use custom CORS config
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/public/**").permitAll() // Public APIs (Signup/Login)
+                        .requestMatchers("/health", "/actuator/health").permitAll() // Health check endpoints
+                        .requestMatchers("/journal/**", "/user/**").authenticated() // Protected APIs
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin APIs
+                        .anyRequest().authenticated() // Secure all other endpoints
+                )
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Use stateless session
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-       return http.build();
-}
+        return http.build();
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -69,8 +68,17 @@ public class SpringSecurity {
         // ✅ Allow all common HTTP methods including OPTIONS
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
 
-        // ✅ Allow all headers that might be needed
-        config.setAllowedHeaders(List.of("*"));
+        // ✅ Explicitly allow required headers
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers",
+                "X-Requested-With",
+                "Cache-Control"
+        ));
 
         // ✅ Expose Authorization header for JWT
         config.setExposedHeaders(List.of("Authorization"));
